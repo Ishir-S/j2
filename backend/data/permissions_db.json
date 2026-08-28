@@ -1,0 +1,20 @@
+{
+  "TRUSTED": {
+    "fs.read": "ALLOW",
+    "fs.write": "ALLOW",
+    "fs.delete": "ASK",
+    "sys.info": "ALLOW"
+  },
+  "EXTERNAL": {
+    "fs.read": "ASK",
+    "fs.write": "DENY",
+    "fs.delete": "DENY",
+    "sys.info": "ASK"
+  },
+  "UNTRUSTED": {
+    "fs.read": "DENY",
+    "fs.write": "DENY",
+    "fs.delete": "DENY",
+    "sys.info": "DENY"
+  }
+}

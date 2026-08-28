@@ -1,0 +1,11 @@
+{
+  "local_device": {
+    "device_id": "9de7ce11-4f4a-4e1c-b8a9-501dab7300b6",
+    "name": "JARVIS Node",
+    "role": "HOST",
+    "trust_level": "OWNER",
+    "platform": "nt",
+    "created_at": 1787898874.304647
+  },
+  "devices": {}
+}

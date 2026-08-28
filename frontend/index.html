@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JARVIS X</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ========================= -->
+    <!-- STARTUP SCREEN -->
+    <!-- ========================= -->
+
+    <div id="startup">
+
+        <div class="startup-center">
+
+            <h1 id="jarvisTitle">JARVIS</h1>
+
+            <div class="boot-loader">
+                <div class="loader-bar">
+                    <div id="loaderFill"></div>
+                </div>
+            </div>
+
+            <div id="bootText">
+                Initializing...
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- CANVAS -->
+    <!-- ========================= -->
+
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- ========================= -->
+    <!-- HUD -->
+    <!-- ========================= -->
+
+    <div id="hud">
+
+        <!-- LEFT PANEL -->
+
+        <div class="hud-panel left-panel">
+
+            <div class="panel-title">
+                SYSTEM STATUS
+            </div>
+
+            <div class="panel-content">
+
+                <div class="status-row">
+                    <span>Core</span>
+                    <span class="online">ONLINE</span>
+                </div>
+
+                <div class="status-row">
+                    <span>Neural Matrix</span>
+                    <span class="online">READY</span>
+                </div>
+
+                <div class="status-row">
+                    <span>Voice Engine</span>
+                    <span class="online">ACTIVE</span>
+                </div>
+
+                <div class="status-row">
+                    <span>Camera Link</span>
+                    <span class="online">READY</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT PANEL -->
+
+        <div class="hud-panel right-panel">
+
+            <div class="panel-title">
+                LIVE TELEMETRY
+            </div>
+
+            <div class="panel-content">
+
+                <div id="fpsValue">
+                    FPS: --
+                </div>
+
+                <div id="memoryValue">
+                    Memory: --
+                </div>
+
+                <div id="threadsValue">
+                    Threads: --
+                </div>
+
+                <div id="uptimeValue">
+                    Uptime: --
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- COMMAND BUTTONS -->
+    <!-- ========================= -->
+
+    <button id="menuToggleBtn" title="Command list">☰</button>
+
+    <div id="bottomControls">
+
+        <button id="dashboardBtn">
+            DASHBOARD
+        </button>
+
+        <button id="cameraBtn">
+            CAMERA
+        </button>
+
+        <button id="voiceBtn">
+            VOICE
+        </button>
+
+        <button id="chatBtn">
+            AI CHAT
+        </button>
+        <button id="viewerBtn">
+            3D VIEWER
+        </button>
+        <button id="mapBtn">
+            GLOBE
+        </button>
+        <button id="researchBtn">
+            RESEARCH
+        </button>
+        <button id="asaBtn">
+            ASA
+        </button>
+        <button id="physicsBtn">
+            PHYSICS
+        </button>
+        <button id="projectsBtn">
+           PROJECTS
+        </button>
+        <button id="networkBtn">
+           NETWORK
+        </button>
+    </div>
+
+    <!-- ========================= -->
+    <!-- DASHBOARD -->
+    <!-- ========================= -->
+
+    <div id="dashboardPanel">
+
+        <div class="window-header">
+
+            <span>DASHBOARD</span>
+
+            <button class="closeWindow"
+                data-close="dashboardPanel">
+                ✕
+            </button>
+
+        </div>
+
+        <div class="window-content">
+
+            <div class="dashboard-grid">
+
+                <div class="card">
+
+                    <h3>TIME</h3>
+
+                    <div id="clockDisplay">
+                        --:--
+                    </div>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>DATE</h3>
+
+                    <div id="dateDisplay">
+                        ---
+                    </div>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>VOICE STATUS</h3>
+
+                    <div id="voiceStatus">
+                        Standby
+                    </div>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>CAMERA STATUS</h3>
+
+                    <div id="cameraStatus">
+                        Offline
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="system-feed">
+
+                <div class="feed-title">
+                    SYSTEM FEED
+                </div>
+
+                <div id="systemLog">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    <!-- ========================= -->
+    <!-- NETWORK WINDOW -->
+    <!-- ========================= -->
+
+    <div id="networkPanel" class="panel-hidden">
+        <div class="window-header">
+            <span>JARVIS NETWORK</span>
+            <button class="closeWindow" data-close="networkPanel">✕</button>
+        </div>
+        <div class="window-content">
+            <div class="card" style="margin-bottom: 10px;">
+                <h3>LOCAL NODE</h3>
+                <div id="localNodeDisplay">Loading...</div>
+                <button id="toggleRoleBtn" style="margin-top:10px; padding: 5px 10px; cursor: pointer;">BECOME HOST</button>
+            </div>
+            <div class="card">
+                <h3>DISCOVERED DEVICES</h3>
+                <ul id="networkDevicesList" style="list-style: none; padding: 0;">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- CAMERA WINDOW -->
+    <!-- ========================= -->
+
+    <div id="cameraPanel">
+
+        <div class="window-header">
+
+            <span>LIVE CAMERA</span>
+
+            <button class="closeWindow"
+                data-close="cameraPanel">
+                ✕
+            </button>
+
+        </div>
+
+        <div id="cameraStage">
+
+            <video
+                id="cameraFeed"
+                autoplay
+                playsinline
+                muted>
+            </video>
+
+            <canvas id="cameraOverlay"></canvas>
+
+        </div>
+
+        <div id="cameraCapabilityBar">
+
+            <label class="cameraToggle">
+                <input type="checkbox" id="capObjects" checked>
+                <span>Objects</span>
+            </label>
+
+            <label class="cameraToggle">
+                <input type="checkbox" id="capMotion" checked>
+                <span>Motion</span>
+            </label>
+
+            <label class="cameraToggle">
+                <input type="checkbox" id="capFaces" checked>
+                <span>Faces</span>
+            </label>
+
+            <label class="cameraToggle">
+                <input type="checkbox" id="capHands" checked>
+                <span>Hand Gestures</span>
+            </label>
+
+            <span id="cameraModelStatus" class="cameraModelStatus"></span>
+
+        </div>
+
+        <div id="cameraFacePanel" class="hidden">
+
+            <input type="text" id="faceNameInput" placeholder="Name this face...">
+            <button id="enrollFaceBtn">ENROLL</button>
+            <div id="knownFacesList"></div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- CHAT WINDOW -->
+    <!-- ========================= -->
+
+    <div id="chatPanel">
+
+        <div class="window-header">
+
+            <span>JARVIS AI</span>
+
+            <div class="chatHeaderActions">
+                <button id="chatMemoryToggle" class="chatMemoryBtn" title="What JARVIS remembers">🧠</button>
+                <button class="closeWindow"
+                    data-close="chatPanel">
+                    ✕
+                </button>
+            </div>
+
+        </div>
+
+        <div class="ollamaBar">
+
+            <span class="ollamaDot" id="chatOllamaDot"></span>
+            <span id="chatOllamaLabel">Connecting to Grok API...</span>
+
+            <input id="grokApiKeyInput" type="password" placeholder="Grok API Key..." title="Enter xAI Grok API Key" style="width: 110px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,255,0.3); color: cyan; font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; outline: none;" />
+
+            <select id="chatModelSelect" class="ollamaModelSelect">
+                <option value="grok-2-latest">grok-2-latest</option>
+                <option value="grok-2-1212">grok-2-1212</option>
+                <option value="grok-beta">grok-beta</option>
+                <option value="grok-vision-beta">grok-vision-beta</option>
+            </select>
+
+            <button id="chatOllamaRefresh" class="ollamaRefreshBtn" title="Save &amp; Refresh connection">⟳</button>
+
+        </div>
+
+        <div class="chatContextBar">
+
+            <span id="chatDateTime">--</span>
+            <span id="chatWeatherLine" class="chatWeatherLine"></span>
+
+            <div class="chatLocationRow">
+                <input id="chatLocationInput" type="text" placeholder="Set city for weather...">
+                <button id="chatSetLocationBtn" title="Set by city name">SET</button>
+                <button id="chatUseGeoBtn" title="Use my current location">📍</button>
+            </div>
+
+        </div>
+
+        <div id="chatMemoryPanel" class="hidden">
+
+            <div class="chatMemoryHeader">
+                <span>WHAT JARVIS REMEMBERS</span>
+                <button id="chatMemoryClose">✕</button>
+            </div>
+
+            <div id="chatMemoryList"></div>
+
+            <div class="chatMemoryActions">
+                <button id="chatClearMemoryBtn">CLEAR MEMORY</button>
+                <button id="chatClearHistoryBtn">CLEAR CHAT HISTORY</button>
+            </div>
+
+        </div>
+
+        <div id="chatMessages">
+
+            <div class="bot-message">
+                Good to see you. All systems are online.
+            </div>
+
+        </div>
+
+        <div id="chatInputArea">
+
+            <input
+                id="chatInput"
+                type="text"
+                placeholder="Enter command..."
+            >
+
+            <button id="sendChat">
+                SEND
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- RESEARCH AGENT -->
+    <!-- ========================= -->
+
+    <div id="researchPanel">
+
+        <button class="closeWindow researchCloseBtn"
+            data-close="researchPanel">
+            ✕
+        </button>
+
+        <div id="researchInputSide">
+
+            <h3>RESEARCH AGENT</h3>
+
+            <p class="researchHint">
+                Give JARVIS a topic. It gathers real material from the sources
+                you enable below, then uses your local Ollama model to
+                synthesize a grounded report — not just the model's own
+                training-data guesses.
+            </p>
+
+            <textarea
+                id="researchTopicInput"
+                placeholder="e.g. Solid-state batteries for electric vehicles">
+            </textarea>
+
+            <div class="researchSourceToggles">
+
+                <label class="researchToggle">
+                    <input type="checkbox" id="srcWikipedia" checked>
+                    <span>Wikipedia</span>
+                </label>
+
+                <label class="researchToggle">
+                    <input type="checkbox" id="srcDuckDuckGo" checked>
+                    <span>DuckDuckGo</span>
+                </label>
+
+                <label class="researchToggle">
+                    <input type="checkbox" id="srcProjectFiles" checked>
+                    <span>Project Manager Files</span>
+                </label>
+
+            </div>
+
+            <div class="researchManualSources">
+
+                <div class="researchManualRow">
+                    <input id="researchUrlInput" type="text" placeholder="Paste a URL to try fetching it...">
+                    <button id="researchFetchUrlBtn">FETCH</button>
+                </div>
+
+                <div class="researchManualRow">
+                    <textarea id="researchPasteInput" placeholder="...or paste article/document text directly here" rows="3"></textarea>
+                    <button id="researchAddPasteBtn">ADD</button>
+                </div>
+
+                <div id="researchManualList"></div>
+
+            </div>
+
+            <div class="ollamaBar researchOllamaBar">
+
+                <span class="ollamaDot" id="researchOllamaDot"></span>
+                <span id="researchOllamaLabel">Checking local AI engine...</span>
+
+            </div>
+
+            <div class="ollamaSettingsRow">
+
+                <input id="researchHostInput" type="text" placeholder="http://localhost:11434">
+
+                <select id="researchModelSelect" class="ollamaModelSelect">
+                    <option value="">No models found</option>
+                </select>
+
+                <button id="researchOllamaRefresh" class="ollamaRefreshBtn" title="Refresh connection">⟳</button>
+
+            </div>
+
+            <button id="startResearchBtn">GATHER &amp; RESEARCH</button>
+
+            <div id="researchStatusLine"></div>
+
+        </div>
+
+        <div id="researchReportSide">
+
+            <div id="researchReportEmpty">
+                No research yet. Describe a topic on the left to get started.
+            </div>
+
+            <div id="researchSourcesUsed" class="hidden">
+
+                <h4>SOURCES CONSULTED</h4>
+                <div id="researchSourcesGrid" class="asaCardGrid"></div>
+
+            </div>
+
+            <div id="researchReport" class="hidden">
+
+                <h2 id="reportTitle"></h2>
+
+                <div class="reportSection">
+                    <h4>SUMMARY</h4>
+                    <div id="reportSummary"></div>
+                </div>
+
+                <div class="reportSection">
+                    <h4>KEY FINDINGS</h4>
+                    <ul id="reportFeatures"></ul>
+                </div>
+
+                <div class="reportSection">
+                    <h4>SOURCE BREAKDOWN</h4>
+                    <div id="reportStack" class="tagRow"></div>
+                </div>
+
+                <div class="reportSection">
+                    <h4>OPEN QUESTIONS</h4>
+                    <ol id="reportNextSteps"></ol>
+                </div>
+
+                <div class="reportSection hidden" id="reportProjectSection">
+                    <h4>SUGGESTED FILE STRUCTURE</h4>
+                    <div id="reportFiles"></div>
+                </div>
+
+                <button id="draftProjectBtn">DRAFT STARTER PROJECT FROM THIS</button>
+
+                <button id="createProjectFromResearchBtn" class="hidden">
+                    CREATE PROJECT FROM THIS
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- AUTONOMOUS SOLUTION ARCHITECT (ASA) -->
+    <!-- ========================= -->
+
+    <div id="asaPanel">
+
+        <button class="closeWindow asaCloseBtn"
+            data-close="asaPanel">
+            ✕
+        </button>
+
+        <div id="asaHeader">
+
+            <h2>AUTONOMOUS SOLUTION ARCHITECT</h2>
+
+            <div class="ollamaBar" id="asaOllamaBar">
+                <span class="ollamaDot" id="asaOllamaDot"></span>
+                <span id="asaOllamaLabel">Checking local AI engine...</span>
+                <select id="asaModelSelect" class="ollamaModelSelect">
+                    <option value="">No models found</option>
+                </select>
+                <button id="asaOllamaRefresh" class="ollamaRefreshBtn" title="Refresh connection">⟳</button>
+            </div>
+
+            <p class="asaScopeNote">
+                ASA reasons with your local Ollama model and uses real browser hardware
+                APIs (WebSerial/WebUSB/WebHID/WebBluetooth/WebMIDI). It generates real
+                source files and can really push them to disk, a ZIP, or GitHub — it
+                does not compile firmware, flash devices, or provision cloud infrastructure,
+                since a browser sandbox has no real toolchain for that.
+            </p>
+
+        </div>
+
+        <div id="asaBody">
+
+            <!-- STAGE: GOAL -->
+            <section class="asaStage" id="asaStageGoal">
+
+                <h3><span class="asaStepNum">1</span> Goal</h3>
+
+                <textarea id="asaGoalInput" placeholder="e.g. I want to learn Morse code"></textarea>
+
+                <button id="asaStartBtn">BEGIN ANALYSIS</button>
+
+                <div id="asaGoalResult" class="asaResultBox hidden"></div>
+
+            </section>
+
+            <!-- STAGE: RESOURCES -->
+            <section class="asaStage hidden" id="asaStageResources">
+
+                <h3><span class="asaStepNum">2</span> Detected Resources</h3>
+
+                <div id="asaResourceGrid" class="asaCardGrid"></div>
+
+            </section>
+
+            <!-- STAGE: HARDWARE -->
+            <section class="asaStage hidden" id="asaStageHardware">
+
+                <h3><span class="asaStepNum">3</span> Detected Hardware</h3>
+
+                <p class="asaHint">
+                    Each button below opens your browser's real device picker
+                    (requires a click, and Chrome or Edge).
+                </p>
+
+                <div class="asaHardwareButtons">
+                    <button id="asaConnectSerial">+ Serial Device</button>
+                    <button id="asaConnectUsb">+ USB Device</button>
+                    <button id="asaConnectHid">+ HID Device</button>
+                    <button id="asaConnectBluetooth">+ Bluetooth Device</button>
+                    <button id="asaConnectMidi">+ Scan MIDI</button>
+                </div>
+
+                <div id="asaHardwareList" class="asaCardGrid"></div>
+
+                <button id="asaContinueToSolutionsBtn">CONTINUE TO SOLUTIONS</button>
+
+            </section>
+
+            <!-- STAGE: SOLUTIONS -->
+            <section class="asaStage hidden" id="asaStageSolutions">
+
+                <h3><span class="asaStepNum">4</span> Generated Solutions</h3>
+
+                <div id="asaSolutionsGrid" class="asaCardGrid"></div>
+
+            </section>
+
+            <!-- STAGE: CHOSEN + BOARD -->
+            <section class="asaStage hidden" id="asaStageChosen">
+
+                <h3><span class="asaStepNum">5</span> Chosen Solution</h3>
+
+                <div id="asaChosenBox" class="asaResultBox"></div>
+
+                <div id="asaBoardBox" class="asaResultBox hidden"></div>
+
+            </section>
+
+            <!-- STAGE: EXECUTION PIPELINE -->
+            <section class="asaStage hidden" id="asaStagePipeline">
+
+                <h3><span class="asaStepNum">6</span> Execution Pipeline</h3>
+
+                <div id="asaGapBox" class="asaResultBox"></div>
+
+                <div id="asaCapabilityProgress"></div>
+
+                <div id="asaBuildResults"></div>
+
+            </section>
+
+            <!-- LIVE LOGS -->
+            <section class="asaStage hidden" id="asaStageLogs">
+
+                <h3><span class="asaStepNum">7</span> Live Logs</h3>
+
+                <div id="asaLogConsole"></div>
+
+            </section>
+
+            <!-- GENERATED FILES -->
+            <section class="asaStage hidden" id="asaStageFiles">
+
+                <h3><span class="asaStepNum">8</span> Generated Files</h3>
+
+                <div id="asaFileList"></div>
+
+            </section>
+
+            <!-- DEPLOYMENT -->
+            <section class="asaStage hidden" id="asaStageDeploy">
+
+                <h3><span class="asaStepNum">9</span> Deployment</h3>
+
+                <div class="asaDeployRow">
+                    <button id="asaDeployProject">SAVE AS PROJECT</button>
+                    <button id="asaDeployZip">DOWNLOAD ZIP</button>
+                    <button id="asaDeployFolder">SAVE TO FOLDER</button>
+                </div>
+
+                <div class="asaGithubRow">
+                    <input id="asaGithubToken" type="password" placeholder="GitHub personal access token (repo scope)">
+                    <button id="asaSaveGithubToken">SAVE TOKEN</button>
+                    <button id="asaDeployGithub">PUSH TO GITHUB</button>
+                </div>
+
+                <div id="asaDeployStatus" class="asaResultBox hidden"></div>
+
+            </section>
+
+            <!-- INSTALLED CAPABILITIES -->
+            <section class="asaStage" id="asaStageCapabilities">
+
+                <h3><span class="asaStepNum">★</span> Installed Capabilities</h3>
+
+                <div id="asaCapabilityList" class="asaCardGrid"></div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- PHYSICS SIMULATION -->
+    <!-- ========================= -->
+
+    <div id="physicsPanel">
+
+        <button class="closeWindow physicsCloseBtn"
+            data-close="physicsPanel">
+            ✕
+        </button>
+
+        <canvas id="physicsCanvas"></canvas>
+
+        <div id="physicsSidebar">
+
+            <div class="physicsSection">
+
+                <h4>ADD OBJECT</h4>
+
+                <div class="physicsAddGrid">
+                    <button id="addBoxBtn">Box</button>
+                    <button id="addSphereBtn">Ball</button>
+                    <button id="addCylinderBtn">Cylinder</button>
+                    <button id="addWallBtn">Wall</button>
+                    <button id="addRampBtn">Ramp</button>
+                    <button id="addCarBtn">Car</button>
+                </div>
+
+            </div>
+
+            <div class="physicsSection">
+
+                <h4>WORLD</h4>
+
+                <div class="physicsRow">
+                    <label>Gravity X</label>
+                    <input type="number" id="gravityX" value="0" step="0.5">
+                </div>
+                <div class="physicsRow">
+                    <label>Gravity Y</label>
+                    <input type="number" id="gravityY" value="-9.82" step="0.5">
+                </div>
+                <div class="physicsRow">
+                    <label>Gravity Z</label>
+                    <input type="number" id="gravityZ" value="0" step="0.5">
+                </div>
+                <button id="applyGravityBtn">APPLY GRAVITY</button>
+
+                <div class="physicsRow">
+                    <label>Time Scale</label>
+                    <input type="range" id="timeScale" min="0.1" max="2" step="0.1" value="1">
+                    <span id="timeScaleValue">1.0x</span>
+                </div>
+
+                <div class="physicsButtonRow">
+                    <button id="pausePhysicsBtn">PAUSE</button>
+                    <button id="stepPhysicsBtn" disabled>STEP</button>
+                    <button id="resetPhysicsBtn">RESET SCENE</button>
+                </div>
+
+                <p class="physicsHint">
+                    Car: click "Car" to spawn, then use WASD / arrow keys to
+                    drive the most recently spawned car (real wheel physics
+                    via raycast suspension, not a scripted animation).
+                </p>
+
+            </div>
+
+            <div class="physicsSection">
+
+                <h4>SELECTED OBJECT</h4>
+
+                <div id="physicsNoSelection" class="physicsMuted">
+                    Click an object in the scene to edit its physics properties.
+                </div>
+
+                <div id="physicsSelected" class="hidden">
+
+                    <div class="physicsRow">
+                        <label>Name</label>
+                        <span id="selName">-</span>
+                    </div>
+
+                    <div class="physicsRow">
+                        <label>Mass (0 = static)</label>
+                        <input type="number" id="selMass" step="0.5" min="0">
+                    </div>
+
+                    <div class="physicsRow">
+                        <label>Restitution</label>
+                        <input type="number" id="selRestitution" step="0.05" min="0" max="1.5">
+                    </div>
+
+                    <div class="physicsRow">
+                        <label>Friction</label>
+                        <input type="number" id="selFriction" step="0.05" min="0" max="2">
+                    </div>
+
+                    <div class="physicsRow">
+                        <label>Linear Damping</label>
+                        <input type="number" id="selLinearDamping" step="0.05" min="0" max="1">
+                    </div>
+
+                    <div class="physicsRow">
+                        <label>Angular Damping</label>
+                        <input type="number" id="selAngularDamping" step="0.05" min="0" max="1">
+                    </div>
+
+                    <button id="applySelectedBtn">APPLY CHANGES</button>
+
+                    <div class="physicsButtonRow">
+                        <button id="teleportUpBtn">NUDGE UP</button>
+                        <button id="freezeToggleBtn">FREEZE</button>
+                        <button id="deleteSelectedBtn">DELETE</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="physicsSection">
+
+                <h4>OBJECTS <span id="physicsObjectCount" class="physicsMuted"></span></h4>
+
+                <div id="physicsObjectList"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- 3D VIEWER -->
+    <!-- ========================= -->
+
+    <div id="viewerPanel">
+
+        <button class="closeWindow viewerCloseBtn"
+            data-close="viewerPanel">
+            ✕
+        </button>
+
+        <div id="viewerStage">
+
+            <canvas id="viewerCanvas"></canvas>
+
+            <canvas id="viewerAxisGizmo"></canvas>
+
+            <div id="viewerToolbar">
+
+                <button id="toggleWireframe" title="Wireframe">WIRE</button>
+                <button id="toggleGrid" title="Grid">GRID</button>
+                <button id="cycleLighting" title="Lighting preset">LIGHT</button>
+                <button id="resetViewBtn" title="Reset view">RESET</button>
+            </div>
+
+            <div id="viewerInfoBox" class="hidden">
+
+                <div id="viewerInfoName">-</div>
+                <div id="viewerInfoDims">-</div>
+                <div id="viewerInfoTris">-</div>
+
+            </div>
+
+            <div id="viewerGestureReadout" class="hidden"></div>
+
+        </div>
+
+        <div id="viewerSidebar">
+
+            <div class="viewerTabRow">
+                <button class="viewerTabBtn active" data-tab="scenes">SCENES</button>
+                <button class="viewerTabBtn" data-tab="import">IMPORT</button>
+                <button class="viewerTabBtn" data-tab="outliner">PARTS</button>
+                <button class="viewerTabBtn" data-tab="control">CONTROL</button>
+            </div>
+
+            <div class="viewerTabPanel active" id="tabScenes">
+
+                <button id="loadSolar">Solar System</button>
+                <button id="loadEarth">Earth</button>
+                <button id="loadMolecule">Molecules</button>
+                <button id="loadNeural">Neural Network</button>
+
+            </div>
+
+            <div class="viewerTabPanel" id="tabImport">
+
+                <button id="loadCustom">Import glTF / GLB</button>
+                <input type="file" id="modelFile" accept=".glb,.gltf" style="display:none">
+
+                <button id="loadStlBtn">Import STL Part(s)</button>
+                <input type="file" id="stlFileInput" accept=".stl" multiple style="display:none">
+
+                <button id="clearPartsBtn">Clear All Parts</button>
+
+                <p class="viewerHint">
+                    Multiple STL files load together as separate, selectable
+                    parts in the same scene — great for multi-part models
+                    (helmet, visor, chestplate, etc).
+                </p>
+
+                <p class="viewerHint viewerWarnHint">
+                    .blend files can't be parsed in a browser — there's no
+                    reliable library for Blender's binary format. Export from
+                    Blender as glTF/GLB (File → Export → glTF 2.0) and import
+                    that instead; it'll come through fully intact.
+                </p>
+
+            </div>
+
+            <div class="viewerTabPanel" id="tabOutliner">
+
+                <div id="partsOutliner">
+                    <div class="viewerHint">No parts loaded yet.</div>
+                </div>
+
+            </div>
+
+            <div class="viewerTabPanel" id="tabControl">
+
+                <label class="viewerToggle">
+                    <input type="checkbox" id="gestureControlToggle">
+                    <span>Hand Gesture Control</span>
+                </label>
+
+                <p class="viewerHint">
+                    Pinch + move = orbit camera (or drag the selected part).
+                    Fist = select what's under the crosshair. Open palm =
+                    deselect. Uses your camera — the same tracker as the
+                    Camera panel.
+                </p>
+
+                <label class="viewerToggle">
+                    <input type="checkbox" id="voiceControlToggle">
+                    <span>Voice Commands</span>
+                </label>
+
+                <p class="viewerHint">
+                    Try: "select the &lt;part name&gt;", "hide/show &lt;part
+                    name&gt;", "show all", "deselect", "wireframe on/off",
+                    "reset view".
+                </p>
+
+                <div id="voiceTranscript" class="viewerHint"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- GLOBE / MAP -->
+    <!-- ========================= -->
+
+    <div id="mapPanel">
+
+        <button class="closeWindow mapCloseBtn"
+            data-close="mapPanel">
+            ✕
+        </button>
+
+        <canvas
+            id="mapCanvas">
+        </canvas>
+
+        <div id="mapSidebar">
+
+            <div class="mapSection">
+
+                <h4>LOCATIONS</h4>
+
+                <div class="mapPointRow">
+                    <span class="mapPointDot originDot"></span>
+                    <input id="originInput" type="text" placeholder="Origin (e.g. Tokyo)">
+                </div>
+
+                <div class="mapPointRow">
+                    <span class="mapPointDot destDot"></span>
+                    <input id="destInput" type="text" placeholder="Destination (e.g. Paris)">
+                </div>
+
+                <button id="mapSearchBtn">LOCATE &amp; MEASURE</button>
+
+                <div id="mapHint">
+                    Tip: click the globe to drop a pin — first click sets origin, second sets destination.
+                </div>
+
+            </div>
+
+            <div class="mapSection" id="mapDistanceSection" style="display:none;">
+
+                <h4>DISTANCE</h4>
+
+                <div id="mapDistanceValue">--</div>
+
+            </div>
+
+            <div class="mapSection" id="mapInfoSection" style="display:none;">
+
+                <h4 id="mapInfoTitle">LOCATION INFO</h4>
+
+                <div id="mapInfoBody">Select a location to see details.</div>
+
+                <div class="mapActionRow">
+                    <button id="mapGoogleBtn">GOOGLE IT</button>
+                    <button id="mapWikiBtn">SUMMARY</button>
+                </div>
+
+            </div>
+
+            <div class="mapSection" id="mapTicketSection" style="display:none;">
+
+                <h4>TICKETS</h4>
+
+                <div id="mapTicketBody">Set an origin and destination to search flights.</div>
+
+                <button id="mapFlightsBtn">FIND FLIGHTS</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         PROJECT MANAGER
+    ===================================================== -->
+
+    <div id="projectsPanel">
+
+        <div class="windowHeader">
+
+            <span>PROJECT MANAGER</span>
+
+            <button
+                id="closeProjects"
+                class="closeWindow"
+                data-close="projectsPanel">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <div class="projectsToolbar">
+
+            <button id="newProjectBtn">
+
+                + PROJECT
+
+            </button>
+
+            <button id="saveProjectBtn">
+
+                SAVE ALL
+
+            </button>
+
+            <button id="deleteProjectBtn">
+
+                DELETE
+
+            </button>
+
+            <button id="newFileBtn">
+
+                + FILE
+
+            </button>
+
+            <button id="importFilesBtn">
+
+                IMPORT FILES
+
+            </button>
+
+            <button id="openFolderBtn">
+
+                OPEN FOLDER
+
+            </button>
+
+            <input type="file" id="importFilesInput" multiple style="display:none">
+
+        </div>
+
+        <div class="projectsBody">
+
+            <!-- LEFT SIDE -->
+
+            <div class="projectSidebar">
+
+                <h3>
+
+                    Projects
+
+                </h3>
+
+                <div id="projectList">
+
+                </div>
+
+            </div>
+
+            <!-- CENTER -->
+
+            <div class="fileSidebar">
+
+                <h3>
+
+                    Files
+
+                </h3>
+
+                <div id="fileList">
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+
+            <div class="projectInfo">
+
+                <div class="editorHeader">
+
+                    <div class="editorFileInfo">
+                        <span id="editorFileName">No File Selected</span>
+                        <span id="unsavedDot" class="unsavedDot hidden" title="Unsaved changes"></span>
+                    </div>
+
+                    <div class="editorActions">
+                        <button id="saveFileBtn">SAVE</button>
+                        <button id="downloadFileBtn">DOWNLOAD</button>
+                    </div>
+
+                </div>
+
+                <div id="projectMeta">
+
+                    No Project Selected
+
+                </div>
+
+                <div id="codeEditor"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- NOTIFICATIONS -->
+    <!-- ========================= -->
+
+    <div id="notificationContainer">
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- AUDIO -->
+    <!-- ========================= -->
+
+    <audio
+        id="startupAudio"
+        preload="auto">
+    </audio>
+
+    <audio
+        id="clickAudio"
+        preload="auto">
+    </audio>
+
+    <audio
+        id="openAudio"
+        preload="auto">
+    </audio>
+
+    <!-- ========================= -->
+    <!-- MODULES -->
+    <!-- ========================= -->
+    <div id="ghostCursor">
+        <div class="cursorCore"></div>
+        <div class="cursorRing"></div>
+        <div class="cursorTargetTicks"></div>
+        <div class="cursorSnapRing"></div>
+        <div class="cursorPinchPulse"></div>
+        <div class="cursorBadge">TRACKING</div>
+    </div>
+    <script type="importmap">
+        {
+        "imports": {
+            "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+            "cannon-es": "https://unpkg.com/cannon-es@0.20.0/dist/cannon-es.js"
+        }
+        }
+    </script>
+    <!-- ========================= -->
+    <!-- CODE EDITOR (CodeMirror) -->
+    <!-- ========================= -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/shell/shell.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/markdown/markdown.min.js"></script>
+
+    <script type="module" src="main.js"></script>
+
+</body>
+</html>
