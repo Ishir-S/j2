@@ -1,10 +1,26 @@
 import os
+import sys
 import json
 import uuid
 import time
+import socket
 from typing import Dict, Any, List, Optional
 
 DB_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "device_db.json")
+
+
+def get_machine_fingerprint() -> str:
+    """Generates a hardware/hostname fingerprint unique to this specific computer."""
+    hostname = socket.gethostname()
+    mac = uuid.getnode()
+    return f"{hostname}:{mac}:{sys.platform}"
+
+
+def generate_unique_device_id() -> str:
+    """Generates a deterministic, unique UUID for this computer."""
+    fingerprint = get_machine_fingerprint()
+    return str(uuid.uuid5(uuid.NAMESPACE_DNS, f"jarvis-node:{fingerprint}"))
+
 
 class DeviceManager:
     def __init__(self):
@@ -15,21 +31,33 @@ class DeviceManager:
 
     def load_db(self):
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+        current_fingerprint = get_machine_fingerprint()
+        hostname = socket.gethostname()
+
         if os.path.exists(self.db_path):
-            with open(self.db_path, "r") as f:
-                data = json.load(f)
-                self.local_device = data.get("local_device", {})
-                self.devices = data.get("devices", {})
-        
-        if not self.local_device:
+            try:
+                with open(self.db_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    self.local_device = data.get("local_device", {})
+                    self.devices = data.get("devices", {})
+            except Exception:
+                self.local_device = {}
+                self.devices = {}
+
+        # If empty, or copied from another machine via Git (different fingerprint), re-generate unique ID
+        if not self.local_device or self.local_device.get("fingerprint") != current_fingerprint:
+            previous_role = self.local_device.get("role", "CLIENT")
             self.local_device = {
-                "device_id": str(uuid.uuid4()),
-                "name": "JARVIS Node",
-                "role": "CLIENT",
+                "device_id": generate_unique_device_id(),
+                "name": f"JARVIS ({hostname})",
+                "role": previous_role,
                 "trust_level": "OWNER",
-                "platform": os.name,
+                "platform": sys.platform,
+                "fingerprint": current_fingerprint,
                 "created_at": time.time()
             }
+            # Clean out any self-entries in devices
+            self.devices.pop(self.local_device["device_id"], None)
             self.save_db()
 
     def save_db(self):

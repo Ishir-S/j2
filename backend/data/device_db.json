@@ -1,11 +1,12 @@
 {
   "local_device": {
-    "device_id": "9de7ce11-4f4a-4e1c-b8a9-501dab7300b6",
-    "name": "JARVIS Node",
+    "device_id": "a32a13f2-a74e-5a73-94e7-05455e6d717b",
+    "name": "JARVIS (ATAL1-PC2)",
     "role": "HOST",
     "trust_level": "OWNER",
-    "platform": "nt",
-    "created_at": 1787898874.304647
+    "platform": "win32",
+    "fingerprint": "ATAL1-PC2:268742760722959:win32",
+    "created_at": 1787975488.9820173
   },
   "devices": {}
 }
