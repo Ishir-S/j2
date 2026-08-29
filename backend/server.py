@@ -17,7 +17,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from .core.agent import JarvisAgent, DEFAULT_GROK_URL, DEFAULT_MODEL, get_grok_api_key
+from .core.agent import JarvisAgent, DEFAULT_GROQ_URL, DEFAULT_MODEL, get_groq_api_key
 from .core import memory
 from .core import tools
 
@@ -31,8 +31,8 @@ connected_clients: Set[WebSocket] = set()
 
 # Global Agent instance
 current_settings = {
-    "api_key": get_grok_api_key(),
-    "base_url": DEFAULT_GROK_URL,
+    "api_key": get_groq_api_key(),
+    "base_url": DEFAULT_GROQ_URL,
     "model": DEFAULT_MODEL
 }
 agent = JarvisAgent(api_key=current_settings["api_key"], model=current_settings["model"])
@@ -79,7 +79,7 @@ async def lifespan(app: FastAPI):
     discovery_service.stop()
     telemetry_task.cancel()
 
-app = FastAPI(title="JARVIS Core (Grok Engine)", version="2.0.0", lifespan=lifespan)
+app = FastAPI(title="JARVIS Core (Groq Engine)", version="2.0.0", lifespan=lifespan)
 
 # Allow CORS for local dev / UI
 app.add_middleware(
@@ -101,7 +101,7 @@ class MessageRequest(BaseModel):
 class SettingsRequest(BaseModel):
     api_key: str = ""
     model: str = DEFAULT_MODEL
-    base_url: str = DEFAULT_GROK_URL
+    base_url: str = DEFAULT_GROQ_URL
 
 
 class FactRequest(BaseModel):
@@ -120,9 +120,9 @@ async def health_check():
     return {
         "status": "online",
         "version": "2.0.0",
-        "engine": "xAI Grok API",
+        "engine": "Groq API",
         "model": current_settings["model"],
-        "has_api_key": bool(current_settings["api_key"] or get_grok_api_key())
+        "has_api_key": bool(current_settings["api_key"] or get_groq_api_key())
     }
 
 
@@ -142,7 +142,7 @@ async def update_settings(req: SettingsRequest):
     if req.api_key:
         current_settings["api_key"] = req.api_key
         agent.api_key = req.api_key
-        os.environ["GROK_API_KEY"] = req.api_key
+        os.environ["GROQ_API_KEY"] = req.api_key
 
     current_settings["model"] = req.model
     agent.model = req.model

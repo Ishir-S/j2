@@ -8,8 +8,8 @@ class MessageRequest(BaseModel):
 
 class SettingsRequest(BaseModel):
     api_key: str = ""
-    model: str = "grok-2-latest"
-    base_url: str = "https://api.x.ai/v1"
+    model: str = "llama-3.3-70b-versatile"
+    base_url: str = "https://api.groq.com/openai/v1"
 
 class FactRequest(BaseModel):
     category: str

@@ -1,6 +1,6 @@
 /* =====================================================
-   JARVIS - GROK API BRIDGE (Replaces legacy Ollama)
-   Re-exports grok.js functions for backwards compatibility.
+   JARVIS - GROQ API BRIDGE (Replaces legacy Ollama)
+   Re-exports groq.js functions for backwards compatibility.
 ===================================================== */
 
 export {
@@ -11,4 +11,4 @@ export {
     chatStream,
     onStatusChange,
     AVAILABLE_MODELS
-} from "./grok.js";
+} from "./groq.js";

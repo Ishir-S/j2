@@ -353,15 +353,16 @@
         <div class="ollamaBar">
 
             <span class="ollamaDot" id="chatOllamaDot"></span>
-            <span id="chatOllamaLabel">Connecting to Grok API...</span>
+            <span id="chatOllamaLabel">Connecting to Groq API...</span>
 
-            <input id="grokApiKeyInput" type="password" placeholder="Grok API Key..." title="Enter xAI Grok API Key" style="width: 110px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,255,0.3); color: cyan; font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; outline: none;" />
+            <input id="groqApiKeyInput" type="password" placeholder="Groq API Key..." title="Enter Groq API Key" style="width: 110px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,255,0.3); color: cyan; font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; outline: none;" />
 
             <select id="chatModelSelect" class="ollamaModelSelect">
-                <option value="grok-2-latest">grok-2-latest</option>
-                <option value="grok-2-1212">grok-2-1212</option>
-                <option value="grok-beta">grok-beta</option>
-                <option value="grok-vision-beta">grok-vision-beta</option>
+                <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
+                <option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option>
+                <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
+                <option value="deepseek-r1-distill-llama-70b">deepseek-r1-distill-llama-70b</option>
+                <option value="gemma2-9b-it">gemma2-9b-it</option>
             </select>
 
             <button id="chatOllamaRefresh" class="ollamaRefreshBtn" title="Save &amp; Refresh connection">⟳</button>

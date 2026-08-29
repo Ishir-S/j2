@@ -2,7 +2,7 @@
    JARVIS - INTENT COMMANDER
    Integrates with intentEngine.js to classify user intent
    across all scales (Question vs Feature Opening vs Capability
-   Execution vs System Modification) using Grok API.
+   Execution vs System Modification) using Groq API.
 ===================================================== */
 
 import { analyzeAndResolveIntent } from "./intentEngine.js";

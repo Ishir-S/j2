@@ -74,7 +74,7 @@ export function initChat() {
     });
 
     const saveApiKeyAndRefresh = () => {
-        const apiKeyInput = document.getElementById("grokApiKeyInput");
+        const apiKeyInput = document.getElementById("groqApiKeyInput") || document.getElementById("grokApiKeyInput");
         if (apiKeyInput && apiKeyInput.value.trim()) {
             setSettings({ apiKey: apiKeyInput.value.trim() });
         }
@@ -82,6 +82,7 @@ export function initChat() {
     };
 
     document.getElementById("chatOllamaRefresh")?.addEventListener("click", saveApiKeyAndRefresh);
+    document.getElementById("groqApiKeyInput")?.addEventListener("change", saveApiKeyAndRefresh);
     document.getElementById("grokApiKeyInput")?.addEventListener("change", saveApiKeyAndRefresh);
 
     document.getElementById("chatModelSelect")?.addEventListener("change", (event) => {
@@ -160,14 +161,14 @@ async function refreshChatConnection() {
     const dot = document.getElementById("chatOllamaDot");
     const label = document.getElementById("chatOllamaLabel");
     const select = document.getElementById("chatModelSelect");
-    const apiKeyInput = document.getElementById("grokApiKeyInput");
+    const apiKeyInput = document.getElementById("groqApiKeyInput") || document.getElementById("grokApiKeyInput");
 
     const currentSettings = getSettings();
     if (apiKeyInput && currentSettings.apiKey && !apiKeyInput.value) {
         apiKeyInput.value = currentSettings.apiKey;
     }
 
-    if (label) label.textContent = "Connecting to Grok API...";
+    if (label) label.textContent = "Connecting to Groq API...";
 
     const result = await checkStatus();
 
@@ -178,7 +179,7 @@ async function refreshChatConnection() {
         dot?.classList.add("connected");
 
         if (label) {
-            label.textContent = "Grok API online";
+            label.textContent = "Groq API online";
         }
 
         if (select && result.models.length) {
@@ -200,7 +201,7 @@ async function refreshChatConnection() {
     } else {
 
         dot?.classList.remove("connected");
-        if (label) label.textContent = result.error || "Grok API Key missing";
+        if (label) label.textContent = result.error || "Groq API Key missing";
     }
 }
 

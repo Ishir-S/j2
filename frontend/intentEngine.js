@@ -7,7 +7,7 @@
    4. SYSTEM_CHANGE_OR_MODIFICATION (editing files, importing files, project changes)
 ===================================================== */
 
-import { generateJSON, getSettings } from "./grok.js";
+import { generateJSON, getSettings } from "./groq.js";
 import { runCommand, hasCommand } from "./commandBridge.js";
 import { addSystemLog, notify } from "./ui.js";
 
@@ -55,17 +55,17 @@ function buildCatalogPromptSummary() {
 }
 
 /**
- * Analyzes the user prompt with Grok API to understand intent and match existing capabilities.
+ * Analyzes the user prompt with Groq API to understand intent and match existing capabilities.
  */
 export async function analyzeAndResolveIntent(userPrompt) {
     const { apiKey, model } = getSettings();
 
-    // If Grok API key is not configured, fallback to basic keyword matching
+    // If Groq API key is not configured, fallback to basic keyword matching
     if (!apiKey) {
         return fallbackRuleBasedIntent(userPrompt);
     }
 
-    const prompt = `You are JARVIS's Core Intent & Capability Classifier powered by Grok AI.
+    const prompt = `You are JARVIS's Core Intent & Capability Classifier powered by Groq AI.
 Your job is to analyze the user's input and determine:
 1. Is this a question/conversation, or an explicit action request?
 2. If an action request, which existing JARVIS capability across ALL scales matches it?
@@ -119,7 +119,7 @@ Respond with ONLY valid JSON:
         };
 
     } catch (err) {
-        console.warn("Intent analysis via Grok API failed:", err);
+        console.warn("Intent analysis via Groq API failed:", err);
         return fallbackRuleBasedIntent(userPrompt);
     }
 }

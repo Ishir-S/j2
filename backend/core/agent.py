@@ -1,7 +1,7 @@
 """
-JARVIS - GROK AI REASONING & AUTONOMOUS AGENT BRAIN
+JARVIS - GROQ AI REASONING & AUTONOMOUS AGENT BRAIN
 Implements a ReAct (Reasoning + Acting + Observing) execution loop,
-connecting xAI Grok API (https://api.x.ai/v1) with genuine host tools and UI capabilities.
+connecting Groq API (https://api.groq.com/openai/v1) with genuine host tools and UI capabilities.
 """
 
 import os
@@ -15,19 +15,24 @@ import httpx
 from . import memory
 from . import tools
 
-DEFAULT_GROK_URL = "https://api.x.ai/v1"
-DEFAULT_MODEL = "grok-2-latest"
+DEFAULT_GROQ_URL = "https://api.groq.com/openai/v1"
+DEFAULT_MODEL = "llama-3.3-70b-versatile"
 
 
-def get_grok_api_key() -> str:
-    return os.environ.get("GROK_API_KEY", "").strip()
+def get_groq_api_key() -> str:
+    return (os.environ.get("GROQ_API_KEY") or os.environ.get("GROK_API_KEY", "")).strip()
+
+
+# Backward compatibility aliases
+DEFAULT_GROK_URL = DEFAULT_GROQ_URL
+get_grok_api_key = get_groq_api_key
 
 
 def build_system_prompt() -> str:
     memory_context = memory.build_system_context()
     tools_catalog = json.dumps(tools.TOOL_DEFINITIONS, indent=2)
 
-    return f"""You are JARVIS — a brilliant, unflappably composed, highly capable AI assistant powered by xAI Grok.
+    return f"""You are JARVIS — a brilliant, unflappably composed, highly capable AI assistant powered by Groq LPU Inference.
 You speak with polished, precise language, genuine warmth, and a touch of dry wit, but cleverness never compromises technical rigor.
 
 === INTENT & CAPABILITY UNDERSTANDING PROTOCOL ===
@@ -66,14 +71,20 @@ RULES:
 
 
 class JarvisAgent:
-    def __init__(self, api_key: str = "", model: str = DEFAULT_MODEL, base_url: str = DEFAULT_GROK_URL):
-        self.api_key = api_key or get_grok_api_key()
+    def __init__(self, api_key: str = "", model: str = DEFAULT_MODEL, base_url: str = DEFAULT_GROQ_URL):
+        self.api_key = api_key or get_groq_api_key()
         self.model = model
         self.base_url = base_url
         self.max_iterations = 6
 
     async def get_available_models(self) -> List[str]:
-        return ["grok-2-latest", "grok-2-1212", "grok-beta", "grok-vision-beta"]
+        return [
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant",
+            "mixtral-8x7b-32768",
+            "deepseek-r1-distill-llama-70b",
+            "gemma2-9b-it"
+        ]
 
     async def run(
         self,
@@ -82,14 +93,14 @@ class JarvisAgent:
         on_event: Optional[Callable[[Dict[str, Any]], None]] = None
     ) -> AsyncGenerator[Dict[str, Any], None]:
         """
-        Executes the ReAct agent loop using Grok API, yielding real-time events.
+        Executes the ReAct agent loop using Groq API, yielding real-time events.
         Events include: status updates, tool calls, tool results, and streamed text tokens.
         """
-        api_key = self.api_key or get_grok_api_key()
+        api_key = self.api_key or get_groq_api_key()
         if not api_key:
             yield {
                 "type": "error",
-                "error": "Grok API Key missing. Please set GROK_API_KEY environment variable or configure it in the HUD settings."
+                "error": "Groq API Key missing. Please set GROQ_API_KEY environment variable or configure it in the HUD settings."
             }
             return
 
@@ -115,7 +126,7 @@ class JarvisAgent:
 
         while iteration < self.max_iterations:
             iteration += 1
-            yield {"type": "status", "status": "THINKING", "detail": f"Grok Intent Reasoning (step {iteration})..."}
+            yield {"type": "status", "status": "THINKING", "detail": f"Groq Intent Reasoning (step {iteration})..."}
 
             full_response = ""
             async with httpx.AsyncClient(timeout=60.0) as client:
@@ -129,7 +140,7 @@ class JarvisAgent:
                     async with client.stream("POST", f"{self.base_url}/chat/completions", headers=headers, json=req_payload) as response:
                         if response.status_code != 200:
                             err_text = await response.aread()
-                            yield {"type": "error", "error": f"Grok API Error {response.status_code}: {err_text.decode('utf-8', 'ignore')}"}
+                            yield {"type": "error", "error": f"Groq API Error {response.status_code}: {err_text.decode('utf-8', 'ignore')}"}
                             return
 
                         async for line in response.aiter_lines():
@@ -154,14 +165,14 @@ class JarvisAgent:
                 except httpx.ConnectError:
                     yield {
                         "type": "error",
-                        "error": "Could not connect to Grok API at https://api.x.ai/v1. Check your internet connection."
+                        "error": "Could not connect to Groq API at https://api.groq.com/openai/v1. Check your internet connection."
                     }
                     return
                 except Exception as e:
-                    yield {"type": "error", "error": f"Grok Agent error: {str(e)}"}
+                    yield {"type": "error", "error": f"Groq Agent error: {str(e)}"}
                     return
 
-            # Check if Grok requested a tool call
+            # Check if Groq requested a tool call
             tool_call_match = re.search(r'```tool_call\s*(\{.*?\})\s*```', full_response, re.DOTALL)
 
             if not tool_call_match:
