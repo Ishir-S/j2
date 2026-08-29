@@ -205,9 +205,14 @@ def os_execute_command(command: str, cwd: Optional[str] = None) -> Dict[str, Any
         target_cwd = WORKSPACE_DIR
 
     try:
-        # Use PowerShell on Windows for modern scripting support
+        if sys.platform == "win32":
+            cmd_args = ["powershell", "-NoProfile", "-Command", command]
+        else:
+            shell_bin = "/bin/zsh" if os.path.exists("/bin/zsh") else "/bin/bash"
+            cmd_args = [shell_bin, "-c", command]
+
         proc = subprocess.run(
-            ["powershell", "-NoProfile", "-Command", command],
+            cmd_args,
             cwd=target_cwd,
             capture_output=True,
             text=True,
@@ -225,7 +230,7 @@ def os_execute_command(command: str, cwd: Optional[str] = None) -> Dict[str, Any
         return {"success": False, "error": str(e)}
 
 
-APP_ALIASES = {
+APP_ALIASES_WIN = {
     "calculator": "calc",
     "calc": "calc",
     "notepad": "notepad",
@@ -251,11 +256,37 @@ APP_ALIASES = {
     "control panel": "control"
 }
 
+APP_ALIASES_MAC = {
+    "calculator": "Calculator",
+    "calc": "Calculator",
+    "notepad": "TextEdit",
+    "text editor": "TextEdit",
+    "chrome": "Google Chrome",
+    "google chrome": "Google Chrome",
+    "safari": "Safari",
+    "browser": "Safari",
+    "vs code": "Visual Studio Code",
+    "vscode": "Visual Studio Code",
+    "code": "Visual Studio Code",
+    "explorer": "Finder",
+    "file explorer": "Finder",
+    "files": "Finder",
+    "finder": "Finder",
+    "task manager": "Activity Monitor",
+    "taskmgr": "Activity Monitor",
+    "activity monitor": "Activity Monitor",
+    "terminal": "Terminal",
+    "settings": "System Settings",
+    "system preferences": "System Preferences",
+    "music": "Music",
+    "notes": "Notes"
+}
+
 def os_open_application(app_name: str) -> Dict[str, Any]:
     cleaned = app_name.lower().strip()
-    target = APP_ALIASES.get(cleaned, app_name)
     try:
         if sys.platform == "win32":
+            target = APP_ALIASES_WIN.get(cleaned, app_name)
             if target.startswith("ms-settings:") or target.startswith("http"):
                 os.system(f"start {target}")
             else:
@@ -263,9 +294,17 @@ def os_open_application(app_name: str) -> Dict[str, Any]:
                     os.startfile(target)
                 except Exception:
                     subprocess.Popen(f"start {target}", shell=True)
+            return {"success": True, "message": f"Launched '{app_name}' (target: {target}) successfully."}
+        elif sys.platform == "darwin":
+            target = APP_ALIASES_MAC.get(cleaned, app_name)
+            if target.startswith("http"):
+                subprocess.Popen(["open", target])
+            else:
+                subprocess.Popen(["open", "-a", target])
+            return {"success": True, "message": f"Launched '{app_name}' on macOS."}
         else:
-            subprocess.Popen([target], shell=True)
-        return {"success": True, "message": f"Launched '{app_name}' (target: {target}) successfully."}
+            subprocess.Popen([cleaned], shell=True)
+            return {"success": True, "message": f"Launched '{app_name}' on Linux."}
     except Exception as e:
         return {"success": False, "error": f"Failed to open '{app_name}': {str(e)}"}
 
@@ -290,7 +329,8 @@ def os_get_system_telemetry() -> Dict[str, Any]:
         cpu_percent = psutil.cpu_percent(interval=0.1)
         cpu_count = psutil.cpu_count(logical=True)
         mem = psutil.virtual_memory()
-        disk = psutil.disk_usage(os.path.splitdrive(WORKSPACE_DIR)[0] or "C:")
+        disk_path = (os.path.splitdrive(WORKSPACE_DIR)[0] + os.sep) if sys.platform == "win32" else "/"
+        disk = psutil.disk_usage(disk_path)
         boot_time = psutil.boot_time()
         uptime_sec = int(time.time() - boot_time)
 
